@@ -212,7 +212,7 @@ async def on_message(message):
         run_track = ''
         messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = 15)).flatten()
         for i in reversed(messages):
-            if i.author.name == 'sheet' and i.author.discriminator == '0102':
+            if i.author.name == 'sheat' and i.author.discriminator == '0102':
                 i_dict = i.embeds[0].to_dict()
                 if 'image' in i_dict and i_dict['image']['url'].startswith('https://raw.githubusercontent.com/sheat-git/mk8dx/main/files/') and run_track == '':
                     run_track = ' (' + i_dict['title'] + ')'
