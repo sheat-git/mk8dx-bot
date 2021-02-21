@@ -313,12 +313,12 @@ async def on_message(message):
             await channel.send(embed = tracks_embed)
         
         # function
-        if mc in ['func', '"func"', "''func''"]:
+        if mc in ['func', '"func"', "''func''", 'FUNK', '"FUNK"', "''FUNK''"]:
             func_embed = discord.Embed(title = '機能説明', color = 0xd2cab6)
             func_embed.set_author(name="twitter:@sheat_MK", url="https://twitter.com/sheat_MK", icon_url="https://pbs.twimg.com/profile_images/1315419578646708224/DqNBLGeY_400x400.jpg")
             func_embed.add_field(name = 'コース名  (例:`ベビぱ`)', value = 'コース名の略称から英語名・日本語名をフルで返答します\n全てのコース名に反応するのでチャンネルに応じてこのbotの「メッセージを読む」権限を剥奪してください\n** **', inline=False)
             func_embed.add_field(name = '即時集計  (例:`calc BP`)', value = 'calc で始めることができます\n`calc` : 6v6\n`calc tag1` : tag1との6v6\n`calc tag1 tag2` : tag1,tag2との4v4\n`calc tag1 tag2 tag3`\n : tag1,tag2,tag3との3v3\n`calc tag1 tag2 tag3 tag4 tag5`\n : tag1-tag5との2v2\n点数入力は2通りできます\n**1.チームごとに空白区切り**\n\t`123 456 789`\n\t上記のようにしてあなたのチーム,tag1,tag2の順に入力します\n\t最後のチームの点数は補完されます\n**2.チームごとに送信**\n\t`123`\n\t`456`\n\t`789`\n\t上記のように順に送信してください\n\t1と同様に最後のチームは補完されます\n** **', inline=False)
-            func_embed.add_field(name = '即時集計のコース記録', value = '前回の即時の入力から次回集計までに入力されたコースのうち、最新のものを記録していきます', inline=False)
+            func_embed.add_field(name = '即時集計のコース記録', value = '前回の即時の入力から次回集計までに入力されたコースのうち、最新のものを記録していきます\n** **', inline=False)
             await channel.send(embed = func_embed)
 
 # Botの起動とDiscordサーバーへの接続
