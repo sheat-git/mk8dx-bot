@@ -1,7 +1,7 @@
 def search(name):
     DKJ_list = ['DKJ', 'dkj', 'じゃんぐる', 'ジャングル', 'jk', 'JK']
     PPS_list = ['PPS', 'pps', 'パクスラ', 'パックンスライダー', 'ぱくすら', 'ぱっくんすらいだー', 'パックン', 'ぱっくん']
-    MP_list = ['MP', 'mp', 'ミュージックパーク', 'ミューパ', 'ミューぱ', 'みゅーじっくぱーく', 'みゅーぱ']
+    rMP_list = ['rMP', 'rmp', 'RMP', 'ミュージックパーク', 'ミューパ', 'ミューぱ', 'みゅーじっくぱーく', 'みゅーぱ']
     TTC_list = ['TTC', 'ttc', 'チクタクロック', 'チクタク', 'ティックトック', 'チックタック', 'ちっくたっく', 'ちくたくろっく', 'ちくたく', 'てぃっくとっく']
     CCB_list = ['CCB', 'ccb', 'プクプクビーチ', 'プクプク', 'プクビ', 'ぷくぷくびーち', 'ぷくぷく', 'ぷくび', 'びーち', 'ビーチ']
     WS_list = ['WS', 'ws', 'ワリオスタジアム', 'ワリスタ', 'わりすた', 'わりおすたじあむ']
@@ -56,7 +56,7 @@ def search(name):
         [['dBP:ベビィパーク', dBP_list], ['dCL:チーズランド', dCL_list], ['dWW:ネイチャーロード', dWW_list], ['dAC:どうぶつの森', dAC_list]], \
         [['MMM:モーモーカントリー', MMM_list], ['rMC:GBAマリオサーキット', rMC_list], ['CCB:プクプクビーチ', CCB_list], ['TT:キノピオハイウェイ', TT_list]], \
         [['rDDD:カラカラさばく', rDDD_list], ['DP3:ドーナツへいや', DP3_list], ['rRRy:ピーチサーキット', rRRy_list], ['DKJ:DKジャングル', DKJ_list]], \
-        [['WS:ワリオスタジアム', WS_list], ['SL:シャーベットランド', SL_list], ['MP:ミュージックパーク', MP_list], ['YV:ヨッシーバレー', YV_list]], \
+        [['WS:ワリオスタジアム', WS_list], ['SL:シャーベットランド', SL_list], ['rMP:ミュージックパーク', rMP_list], ['YV:ヨッシーバレー', YV_list]], \
         [['TTC:チクタクロック', TTC_list], ['PPS:パックンスライダー', PPS_list], ['GV:グラグラかざん', GV_list], ['rRRd:64レインボーロード', rRRd_list]], \
         [['dWGM:ワリオこうざん', dWGM_list], ['dRR:SFCレインボーロード', dRR_list], ['dIIO:ツルツルツイスター', dIIO_list], ['dHC:ハイラルサーキット', dHC_list]], \
         [['dNBC:ネオクッパシティ', dNBC_list], ['dRiR:リボンロード', dRiR_list], ['dSBS:リンリンメトロ', dSBS_list], ['BB:ビッグブルー', BB_list]]]
@@ -69,7 +69,7 @@ def type_search(name):
     front = ['前コース', '前コ', '前こ', '前', '前個', 'まえこ', 'まえ', 'まえこーす']
     mid = ['中位コース', '中位コ', '中位こ', '中位', '中', 'なか', 'ちゅうい', 'ちゅういこ', 'ちゅういこーす']
     back = ['打開コース', '打開コ', '打開こ', 'だかいこ', '打開', 'だかいこーす', 'だかい', 'うしろ', '後', '後ろ']
-    strategy_dict = {'前コース':['WS', 'dNBC', 'DKJ', 'dHC', 'MW', 'TTC'], '中位コース':['TM', 'Ed', 'DS', 'dIIO', 'MP', 'MMM'], '打開コース':['dCL', 'rDDD', 'dEA', 'YV', 'rMC', 'DP3']}
+    strategy_dict = {'前コース':['WS', 'dNBC', 'DKJ', 'dHC', 'MW', 'TTC'], '中位コース':['TM', 'Ed', 'DS', 'dIIO', 'rMP', 'MMM'], '打開コース':['dCL', 'rDDD', 'dEA', 'YV', 'rMC', 'DP3']}
     for i in [front, mid, back]:
         if name in i:
             return [i[0],strategy_dict[i[0]]]
