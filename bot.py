@@ -5,6 +5,11 @@ import os
 import calc
 import track
 
+author_name = os.environ['name']
+author_num = os.environ['num']
+TOKEN = os.environ['DISCORD_BOT_TOKEN']
+
+client = commands.Bot(command_prefix='!sheat ')
 
 @client.event
 async def on_ready():
@@ -112,10 +117,4 @@ async def on_message(message):
 
 
 if __name__ == '__main__':
-    author_name = os.environ['name']
-    author_num = os.environ['num']
-    TOKEN = os.environ['DISCORD_BOT_TOKEN']
-
-    client = commands.Bot(command_prefix='!sheat ')
-
     client.run(TOKEN)
