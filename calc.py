@@ -214,3 +214,55 @@ def create_status(main_match_dict):
             value += f'{status_dict["team"]} : {status_dict["score"]} ({create_dif_text(score, status_dict["score"])})\n'
     description += f'@{12-len(main_match_dict["race_list"])}'
     return {'title':f'現在{rank}位', 'description':description, 'fields':[{'name':'score', 'value':value}]}
+
+def content(content):
+    new_list = []
+    if '-' in content:
+        if content.startswith('-'):
+            content = '1' + content
+        if content.endswith('-'):
+            content = content + '12'
+        content_list = list(content.split('-'))
+        for i, c in enumerate(content_list):
+            if i == 0:
+                pass
+            else:
+                if c[0] == '1':
+                    if len(c) == 1:
+                        new_list.append('')
+                    else:
+                        b = int(c[:2])
+                        if content_list[i-1].endswith('10'):
+                            a = 10
+                        elif content_list[i-1].endswith('11'):
+                            a = 11
+                        else:
+                            a = int(content_list[i-1][-1])
+                        if b - a > 1 :
+                            new = ''
+                            while b - a > 1:
+                                a += 1
+                                new += str(a)
+                            new_list.append(new)
+                        else:
+                            new_list.append('')
+                else:
+                    a = int(content_list[i-1][-1])
+                    b = int(c[0])
+                    if b - a > 1 :
+                        new = ''
+                        while b - a > 1:
+                            a += 1
+                            new += str(a)
+                        new_list.append(new)
+                    else:
+                        new_list.append('')
+        if len(content_list) - len(new_list) == 1:
+            content = ''
+            for i in range(len(new_list)):
+                content += content_list[i] + new_list[i]
+            content += content_list[-1]
+            return content
+        else:
+            return content.replace('-', '')
+    return content
