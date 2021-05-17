@@ -74,5 +74,3 @@ def type_search(name):
     for i in [front, mid, back]:
         if name in i:
             return [i[0],strategy_dict[i[0]]]
-
-print(search(input()))
