@@ -70,7 +70,7 @@ def type_search(name):
     front = ['前コース', '前コ', '前こ', '前', '前個', 'まえこ', 'まえ', 'まえこーす']
     mid = ['中位コース', '中位コ', '中位こ', '中位', '中', 'なか', 'ちゅうい', 'ちゅういこ', 'ちゅういこーす']
     back = ['打開コース', '打開コ', '打開こ', 'だかいこ', '打開', 'だかいこーす', 'だかい', 'うしろ', '後', '後ろ']
-    strategy_dict = {'前コース':['WS', 'dNBC', 'DKJ', 'dHC', 'MW', 'TTC'], '中位コース':['TM', 'Ed', 'DS', 'dIIO', 'MP', 'MMM'], '打開コース':['dCL', 'rDDD', 'dEA', 'YV', 'rMC', 'DP3']}
+    strategy_dict = {'前コース':['WS', 'dNBC', 'DKJ', 'dHC', 'MW', 'TTC', 'ぱくすら', '火山', 'ほねさば'], '中位コース':['TM', 'Ed', 'DS', 'dIIO', 'MP', 'MMM'], '打開コース':['dCL', 'rDDD', 'dEA', 'YV', 'rMC', 'DP3', 'まりかす']}
     for i in [front, mid, back]:
         if name in i:
             return [i[0],strategy_dict[i[0]]]
