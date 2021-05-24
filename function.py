@@ -36,7 +36,7 @@ def calObsEmbed(users):
     url = 'https://sheat-git.github.io/sokuji/?user='
     url2 = '\n' + url
     embed_dict['description'] = f'{url}{url2.join(users)}'
-    embed_dict['footer'] = {'text':'Copyright (c) 2021- iam-takagi'}
+    embed_dict['footer'] = {'text':'Copyright (c) 2020 GungeeSpla'}
     embed_dict['color'] = ORIGINAL_COLOR
     return discord.Embed.from_dict(embed_dict)
 
