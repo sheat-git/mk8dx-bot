@@ -54,7 +54,7 @@ async def set(ctx,*args):
     global MINUTES
     message = ctx.message
     channel = message.channel
-    messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES)).flatten()
+    messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
     sendel = calc.setTeams(ctx, args, messages, author=bot.user)
     if 'embeds' in sendel:
         for embed in sendel['embeds']:
@@ -68,7 +68,7 @@ async def obs(ctx):
     global MINUTES
     message = ctx.message
     channel = message.channel
-    messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES)).flatten()
+    messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
     mentions = message.mentions
     sendel = calc.obs(ctx, messages, mentions=mentions, author=bot.user)
     if 'embeds' in sendel:
@@ -83,7 +83,7 @@ async def result(ctx):
     global MINUTES
     message = ctx.message
     channel = message.channel
-    messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES)).flatten()
+    messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
     l = calc.result(ctx,messages,author=bot.user)
     if l == None:
         return
@@ -112,7 +112,7 @@ async def send(ctx):
                 break
         if sch == None:
             return
-    messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES)).flatten()
+    messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
     l = calc.send(sch,messages,author=bot.user)
     if l == None:
         return
@@ -148,11 +148,11 @@ async def on_message(message):
         return
 
     if (calc.is13int(content.replace(' ','').replace('-','')) or content.replace(' ','').replace('-','') == '') and content:
-        messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES)).flatten()
+        messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
         sendel = calc.cal(content,messages,author=bot.user)
     
     elif content == 'back':
-        messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES)).flatten()
+        messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
         sendel = calc.back(messages,author=bot.user)
     
     elif content == 'func':

@@ -488,7 +488,7 @@ def search(messages, author=None):
     mg = None
     smg = None
     track = ''
-    for message in reversed(messages):
+    for message in messages:
         if message.author == author and len(message.embeds) != 0:
             embed = message.embeds[0]
             if isTrack(embed) and track == '':
