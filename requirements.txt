@@ -1,1 +1,4 @@
 discord.py
+matplotlib
+Pillow
+firebase-admin

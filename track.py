@@ -1,8 +1,17 @@
+import discord
+import os
+
+from discord.ext.commands.errors import NoEntryPointError
+
+
+ORIGINAL_COLOR = int(os.environ['COLOR'],0)
+
+
 def search(name):
     name = str.lower(name)
     rDKJ_list = ['rDKJ', 'rdkj', 'dkj', 'じゃんぐる', 'ジャングル', 'jk', 'JK', 'dk']
     rPPS_list = ['rPPS', 'rpps', 'pps', 'パクスラ', 'パックンスライダー', 'ぱくすら', 'ぱっくんすらいだー', 'パックン', 'ぱっくん']
-    rMP_list = ['rMP', 'rmp', 'mp', 'ミュージックパーク', 'ミューパ', 'ミューぱ', 'みゅーじっくぱーく', 'みゅーぱ']
+    rMP_list = ['rMP', 'rmp', 'mp', 'ミュージックパーク', 'ミューパ', 'ミューぱ', 'みゅーじっくぱーく', 'みゅーぱ', 'seimei']
     rTTC_list = ['rTTC', 'rttc', 'ttc', 'チクタクロック', 'チクタク', 'ティックトック', 'チックタック', 'ちっくたっく', 'ちくたくろっく', 'ちくたく', 'てぃっくとっく']
     rCCB_list = ['rCCB', 'rccb', 'ccb', 'プクプクビーチ', 'プクプク', 'プクビ', 'ぷくぷくびーち', 'ぷくぷく', 'ぷくび', 'びーち', 'ビーチ']
     rWS_list = ['rWS', 'rws', 'ws', 'ワリオスタジアム', 'ワリスタ', 'わりすた', 'わりおすたじあむ']
@@ -17,12 +26,12 @@ def search(name):
     rDP3_list = ['rDP3', 'rdp3', 'dp3', 'ドーナツへいや', 'どーなつへいや', 'ドーナツ平野', 'どーなつ平野', 'ドーナツヘイヤ', '平野', 'へいや']
     dRR_list = ['dRR', 'drr', 'DRR', 'SFC', 'sfc', 'SFCにじ', 'SFC虹', 'sfcにじ', 'sfc虹', 'えすえふしー', 'エスエフシー', 'SFCレインボーロード', 'sfcレインボーロード', 'SFCれいんぼーろーど', 'sfcれいんぼーろーど', 'えすえふしーにじ', 'エスエフシーニジ']
     rGV_list = ['rGV', 'rgv', 'gv', 'ぐらぐら', 'グラグラ', 'グラグラ火山', 'ぐらぐら火山', 'グラグラカザン', 'ぐらぐらかざん', '火山', 'かざん']
-    rMMM_list = ['rMMM', 'rmmm', 'mmm', 'モモカン', 'もーもーカントリー', 'モーモーカントリー', 'ももかん', 'もーもーかんとりー', '牛', 'うし']
-    dWGM_list = ['dWGM', 'dwgm', 'DWGM', 'ワリオこうざん', 'ワリオ鉱山', 'わりおこうざん', 'わりこう', 'ワリこう', 'ワリ鉱', 'わり鉱']
+    rMMM_list = ['rMMM', 'rmmm', 'mmm', 'モモカン', 'もーもーカントリー', 'モーモーカントリー', 'ももかん', 'もーもーかんとりー', '牛', 'うし', 'わたがし']
+    dWGM_list = ['dWGM', 'dwgm', 'DWGM', 'ワリオこうざん', 'ワリオ鉱山', 'わりおこうざん', 'わりこう', 'ワリこう', 'ワリ鉱', 'わり鉱', 'gomi', 'gomi track']
     WP_list = ['WP', 'wp', 'ウォーターパーク', 'ヲーターパーク', 'うぉーたーぱーく', 'をーたーぱーく', 'をたぱ', 'ヲタパ', 'うぉたぱ', 'ウォタパ', '水公園', 'オタぱ', 'おたぱ', 'オタパ']
     dEA_list = ['dEA', 'dea', 'DEA', 'エキサイトバイク', '役馬', 'エキバ', 'えきば', 'えきさいとばいく']
     Ed_list = ['Ed', 'ed', 'ED', 'エレドリ', 'エレド', 'エレクトロドリーム', 'えれどり', 'えれど', 'えれくとろどりーむ', '夢']
-    TH_list = ['TH', 'th', 'キノピオハーバー', 'きのぴおはーばー', 'はーばー', 'ハーバー']
+    TH_list = ['TH', 'th', 'キノピオハーバー', 'きのぴおはーばー', 'はーばー', 'ハーバー', 'せいめい']
     BC_list = ['BC', 'bc', 'クッパキャッスル', 'くっぱきゃっする', 'くっきゃぱっする', 'クッキャパッスル', 'くぱきゃ', 'クパキャ']
     SA_list = ['SA', 'sa', 'サンシャイン空港', 'サンシャインくうこう', 'さんしゃいんくうこう', '空港', 'くうこう']
     SSC_list = ['SSC', 'ssc', 'スイーツキャニオン', 'すいーつきゃにおん', 'スイキャニ', 'すいきゃに']
@@ -39,14 +48,14 @@ def search(name):
     MC_list = ['MC', 'mc', 'マリオサーキット', 'マリサ', 'まりおさーきっと', 'まりさ', '新マリサ', 'しんまりさ', 'シンマリサ', '新まりさ']
     RR_list = ['RR', 'rr', '新虹', 'しんにじ', 'レインボーロード', 'シンニジ', 'れいんぼーろーど']
     dMC_list = ['dMC', 'dmc', 'DMC', 'ミュートシティ', 'ミュート', 'みゅーと', 'みゅーとしてぃ']
-    dBP_list = ['dBP', 'dbp', 'DBP', 'BP', 'bp', 'ベビィパーク', 'ベビーパーク', 'べびぃぱーく', 'べびーぱーく', 'べびぱ', 'ベビパ']
+    dBP_list = ['dBP', 'dbp', 'DBP', 'BP', 'bp', 'ベビィパーク', 'ベビーパーク', 'べびぃぱーく', 'べびーぱーく', 'べびぱ', 'ベビパ', 'kami', 'kami track', 'おみくじこーす']
     dCL_list = ['dCL', 'dcl', 'DCL', 'チーズランド', 'ちーずらんど', 'ちーず', 'チーズ']
     dWW_list = ['dWW', 'dww', 'DWW', 'ネイチャーロード', 'ねいちゃーろーど', 'ネイチャー', 'ねいちゃー', 'なちゅれ', 'ナチュレ']
     dAC_list = ['dAC', 'dac', 'DAC', 'ac', 'AC', 'どうぶつの森', 'どうもり', '動物の森', 'どう森', 'ぶつ森', 'ぶつもり', 'ドウブツノモリ', 'ドウモリ', 'ブツモリ']
     dNBC_list = ['dNBC', 'dnbc', 'DNBC', 'ネオクッパシティ', 'ねおくっぱしてぃ', 'ネオぱ', 'ネオパ', 'ねおぱ', 'ねおくっぱ', 'ネオクッパ']
     dRiR_list = ['dRiR', 'DRIR', 'drir', 'リボンロード', 'リボン', 'りぼんろーど', 'りぼん']
     dSBS_list = ['dSBS', 'dsbs', 'DSBS', 'リンリンメトロ', 'りんりんめとろ', 'りんめと', 'リンメト', 'リンリン', 'りんりん', 'リン', 'りん', '凛']
-    dBB_list = ['dBB', 'dbb', 'bb', 'ビッグブルー', 'びっぐぶるー']
+    dBB_list = ['dBB', 'dbb', 'bb', 'ビッグブルー', 'びっぐぶるー', 'もざびー']
     MW_list = ['MW', 'mw', 'ワリオスノーマウンテン', 'わりおすのーまうんてん', 'ワリスノ', 'わりすの', '雪山', 'ゆきやまうんてん', 'すの', 'スノ']
     tracks_list = [ \
         [['MKS:マリオカートスタジアム', MKS_list], ['WP:ウォーターパーク', WP_list], ['SSC:スイーツキャニオン', SSC_list], ['TR:ドッスンいせき', TR_list]], \
@@ -70,7 +79,19 @@ def type_search(name):
     front = ['前コース', '前コ', '前こ', '前', '前個', 'まえこ', 'まえ', 'まえこーす']
     mid = ['中位コース', '中位コ', '中位こ', '中位', '中', 'なか', 'ちゅうい', 'ちゅういこ', 'ちゅういこーす']
     back = ['打開コース', '打開コ', '打開こ', 'だかいこ', '打開', 'だかいこーす', 'だかい', 'うしろ', '後', '後ろ']
-    strategy_dict = {'前コース':['WS', 'dNBC', 'DKJ', 'dHC', 'MW', 'TTC', 'ぱくすら', '火山', 'ほねさば'], '中位コース':['TM', 'Ed', 'DS', 'dIIO', 'MP', 'MMM'], '打開コース':['dCL', 'rDDD', 'dEA', 'YV', 'rMC', 'DP3', 'まりかす']}
+    strategy_dict = {'前コース':['WS', 'dNBC', 'DKJ', 'dHC', 'MW', 'TTC'], '中位コース':['TM', 'Ed', 'DS', 'dIIO', 'MP', 'MMM'], '打開コース':['dCL', 'rDDD', 'dEA', 'YV', 'rMC', 'DP3']}
     for i in [front, mid, back]:
         if name in i:
             return [i[0],strategy_dict[i[0]]]
+
+def embed(txt):
+    global ORIGINAL_COLOR
+    track_list = search(txt)
+    if not track_list == None:
+        embed = discord.Embed(title = track_list[0].replace(':',' '), color = ORIGINAL_COLOR)
+        embed.set_image(url = track_list[1])
+        return embed
+    type_list = type_search(txt)
+    if not type_list == None:
+        embed = discord.Embed(title = type_list[0], description = '\n'.join(map(lambda x:search(x)[0].replace(':',' '), type_list[1])), color=ORIGINAL_COLOR)
+        return embed
