@@ -109,7 +109,6 @@ def make6(difs, sum, teams):
     return addTxt6(img,sum,teams)
 
 def toEmbed(message):
-    global ORIGINAL_COLOR
     content = message.content
     jsonData = json.loads(content)
     embed = discord.Embed(title=' - '.join(jsonData['teams']),color=ORIGINAL_COLOR)

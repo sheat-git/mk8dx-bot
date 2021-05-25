@@ -125,7 +125,6 @@ class table:
         return score_txt
 
     def toDict(self):
-        global ORIGINAL_COLOR
         title = f'即時集計 {self.form}v{self.form}\n' + ' - '.join(self.teams)
         description = f'`{self._score2txt(self.sum)}`  `@{12 - len(self.scores)}`'
         fields = []
@@ -286,7 +285,6 @@ class subTable:
         return self
     
     def toDict(self):
-        global ORIGINAL_COLOR
         title = 'race' + str(self.race)
         if self.track:
             title += f'  - {self.track}'

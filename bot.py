@@ -51,7 +51,6 @@ async def cal4(ctx,*args):
 
 @bot.command(aliases=['s','S'])
 async def set(ctx,*args):
-    global MINUTES
     message = ctx.message
     channel = message.channel
     messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
@@ -65,7 +64,6 @@ async def set(ctx,*args):
 
 @bot.command(aliases=['o','O'])
 async def obs(ctx):
-    global MINUTES
     message = ctx.message
     channel = message.channel
     messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
@@ -80,7 +78,6 @@ async def obs(ctx):
 
 @bot.command(aliases=['r','R'])
 async def result(ctx):
-    global MINUTES
     message = ctx.message
     channel = message.channel
     messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
@@ -97,7 +94,6 @@ async def edit(ctx,*args):
 
 @bot.command(aliases=['sd','SD'])
 async def send(ctx):
-    global MINUTES
     message = ctx.message
     channel = message.channel
     channel_mentions = message.channel_mentions
@@ -127,8 +123,7 @@ async def func(ctx):
 @bot.event
 async def on_message(message):
     await bot.process_commands(message)
-
-    global MINUTES
+    
     content = message.content
     channel = message.channel
     sendel = {}
@@ -182,5 +177,4 @@ async def on_message(message):
             await mg.delete()
     
 
-if __name__ == '__main__':
-    bot.run(TOKEN)
+bot.run(TOKEN)

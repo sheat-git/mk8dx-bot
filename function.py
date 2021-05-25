@@ -7,7 +7,6 @@ ORIGINAL_COLOR = int(os.environ['COLOR'],0)
 MINUTES = 30
 
 def calStartEmbed(teams,form=0,caln=0,args=()):
-    global ORIGINAL_COLOR,MINUTES
     newLine = '\n'
     if not form:
         form = 12//len(teams)
@@ -20,28 +19,27 @@ def calStartEmbed(teams,form=0,caln=0,args=()):
         fields.append({'name':f'__{mayForm}v{mayForm}の即時がしたい__','value':f'```fix{newLine}%cal{mayForm} {" ".join(args)} または %cal{mayForm} YourTeam {" ".join(args)}```','inline':False})
     sampleTeams = ['RR','SS','TT','XX','YY','ZZ'][:12//form]
     fields.append({'name':'__チーム名を変更したい__','value':f'```fix{newLine}%set {" ".join(sampleTeams)}```-> チーム名が{",".join(sampleTeams)}に','inline':False})
-    fields.append({'name':'__配信用に即時集計レイヤーのURLを発行したい__','value':'```fix\n%obs```※urlは発行したユーザー毎に異なります。\n__即時集計毎に__urlを発行しなければ更新されません。','inline':False})
+    fields.append({'name':'__配信用に即時集計レイヤーのURLを発行したい__','value':'```fix\n%obs```※urlは発行したユーザー毎に固定です。\n__即時集計毎に__コマンドを実行してください。','inline':False})
     fields.append({'name':'__集計表を作成したい__','value':'```fix\n%result```即時集計より集計表を作成します。12レース完走後に使用可能です。','inline':False})
     embed_dict['fields'] = fields
     embed_dict['color'] = ORIGINAL_COLOR
     return discord.Embed.from_dict(embed_dict)
 
 def calObsEmbed(users):
-    global ORIGINAL_COLOR
     embed_dict = {}
-    title = f'即時集計レイヤー URL for @{",@".join(users)}'
-    if len(title) > 50:
-        title = title[:50]
-    embed_dict['title'] = title
+    embed_dict['title'] = f'即時集計レイヤー URL'
+    embed_dict['description'] = 'どのサーバーでもユーザー毎のURLは変わりません！\n※Discordのユーザー名を変更するとURLも変わってしまいます...（ニックネームは関係なし）'
     url = 'https://sheat-git.github.io/sokuji/?user='
-    url2 = '\n' + url
-    embed_dict['description'] = f'{url}{url2.join(users)}'
+    fields = []
+    for user in users:
+        field = {'name':f'{user[:-4]} さん用 更新開始','value':url+user}
+        fields.append(field)
+    embed_dict['fields'] = fields
     embed_dict['footer'] = {'text':'Copyright (c) 2020 GungeeSpla'}
     embed_dict['color'] = ORIGINAL_COLOR
     return discord.Embed.from_dict(embed_dict)
 
 def func():
-    global ORIGINAL_COLOR
     embed_dict = {}
     embed_dict['author'] = {'name':"twitter:@sheat_MK", 'url':"https://twitter.com/sheat_MK", 'icon_url':"https://pbs.twimg.com/profile_images/1315419578646708224/DqNBLGeY_400x400.jpg"}
     embed_dict['title'] = 'コマンド一覧'
@@ -76,7 +74,6 @@ def func():
     return discord.Embed.from_dict(embed_dict)
 
 def old_calc(teams):
-    global ORIGINAL_COLOR
     if teams:
         if len(teams) > 6:
             teams = teams[:6]
@@ -94,7 +91,6 @@ def old_calc(teams):
     return discord.Embed.from_dict(embed_dict)
 
 def old_func():
-    global ORIGINAL_COLOR
     embed_dict = {}
     embed_dict['title'] = 'botが生まれ変わりました！'
     embed_dict['description'] = \
