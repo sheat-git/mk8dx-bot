@@ -13,6 +13,7 @@ import mkresult
 
 
 ORIGINAL_COLOR = int(os.environ['COLOR'],0)
+BOT_ID = int(os.environ['BOT_ID'])
 
 
 T = TypeVar('T', bound='table')
@@ -482,12 +483,12 @@ def isTable(embed,embed_dict=None):
     else:
         return False
 
-def search(messages, author=None):
+def search(messages):
     mg = None
     smg = None
     track = ''
     for message in messages:
-        if message.author == author and len(message.embeds) != 0:
+        if message.author.id == BOT_ID and len(message.embeds) != 0:
             embed = message.embeds[0]
             if isTrack(embed) and track == '':
                 track = embed.title.split(' ')[0]
@@ -530,9 +531,9 @@ def start(ctx, args, form=0):
     return [func.calStartEmbed(teams=tbl.teams,form=tbl.form,caln=caln,args=args),tbl.toEmbed()]
 
 
-def setTeams(ctx, args, messages, author=None):
+def setTeams(ctx, args, messages):
     teams = list(args)
-    message = search(messages, author)[0]
+    message = search(messages)[0]
     if message == None:
         return {}
     tbl = table.fromMessage(message)
@@ -556,8 +557,8 @@ def setTeams(ctx, args, messages, author=None):
     return {'embeds':[tbl.toEmbed()], 'del':[message]}
 
 
-def cal(content,messages, author=None):
-    tbl_mg, stbl_mg, track = search(messages,author)
+def cal(content,messages):
+    tbl_mg, stbl_mg, track = search(messages)
     if tbl_mg == None:
         return {}
     tbl = table.fromMessage(tbl_mg)
@@ -584,8 +585,8 @@ def cal(content,messages, author=None):
     return {'embeds':[tbl.toEmbed()],'del':[tbl_mg]}
 
 
-def back(messages,author=None):
-    tbl_mg, stbl_mg, track = search(messages,author)
+def back(messages):
+    tbl_mg, stbl_mg, track = search(messages)
     if not stbl_mg == None:
         stbl = subTable.fromMessage(stbl_mg)
         if stbl.filled() > 1:
@@ -599,11 +600,50 @@ def back(messages,author=None):
         return {'embeds':[tbl.toEmbed()],'del':[tbl_mg]}
 
 
-def edit():
-    pass
+def editTrack(ctx,messages,args):
+    tbl_mg, stbl_mg, _ = search(messages)
+    if tbl_mg == None:
+        return {}
+    if len(args) == 2:
+        if not is13int(args[0]):
+            return {}
+        race = int(args[0],16)
+    else:
+        race = 0
+    if len(args) in [1,2]:
+        trTxt = args[-1]
+        trList = track.search(trTxt)
+        if trList == None:
+            return {}
+        tr = trList[0].split(':')[0]
+    else:
+        return {}
+    tbl = table.fromMessage(tbl_mg)
+    if int(tbl) == 0:
+        return {}
+    if stbl_mg == None:
+        if int(tbl) < race and race < - int(tbl):
+            return {}
+        if race >= 0:
+            tbl.tracks[race-1] = tr
+        else:
+            tbl.tracks[race] = tr
+        return {'embeds':[tbl.toEmbed()],'del':[tbl_mg]}
+    stbl = subTable.fromMessage(stbl_mg)
+    if stbl.race == race or race == 0:
+        stbl.track = tr
+        return {'embeds':[tbl.toEmbed(),stbl.toEmbed()],'del':[tbl_mg,stbl_mg]}
+    if int(tbl) < race and race < - int(tbl):
+        return {}
+    if race >= 0:
+        tbl.tracks[race-1] = tr
+    else:
+        tbl.tracks[race] = tr
+    return {'embeds':[tbl.toEmbed(),stbl.toEmbed()],'del':[tbl_mg,stbl_mg]}
+    
 
-def result(ctx,messages,author=None):
-    tbl_mg, stbl_mg, track = search(messages,author)
+def result(ctx,messages):
+    tbl_mg, stbl_mg, track = search(messages)
     if tbl_mg == None:
         return
     tbl = table.fromMessage(tbl_mg)
@@ -633,8 +673,8 @@ def result(ctx,messages,author=None):
     jsonData = {'type':'result','id':ctx.channel.id,'teams':teams,'sum':sum}
     return [imgDFile,json.dumps(jsonData)]
 
-def send(channel,messages,author=None):
-    tbl_mg, stbl_mg, track = search(messages,author)
+def send(channel,messages):
+    tbl_mg, stbl_mg, track = search(messages)
     if tbl_mg == None:
         return
     tbl = table.fromMessage(tbl_mg)
@@ -657,8 +697,8 @@ def send(channel,messages,author=None):
     return [imgDFile,json.dumps(jsonData)]
 
 
-def obs(ctx, messages, mentions=[], author=None):
-    tbl_mg, stbl_mg, track = search(messages,author)
+def obs(ctx, messages, mentions=[]):
+    tbl_mg, stbl_mg, track = search(messages)
     if tbl_mg == None:
         return {}
     tbl = table.fromMessage(tbl_mg)

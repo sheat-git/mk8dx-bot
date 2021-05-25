@@ -51,46 +51,47 @@ async def cal4(ctx,*args):
 
 @bot.command(aliases=['s','S'])
 async def set(ctx,*args):
-    message = ctx.message
-    channel = message.channel
-    messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
-    sendel = calc.setTeams(ctx, args, messages, author=bot.user)
+    messages = await ctx.message.channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
+    sendel = calc.setTeams(ctx, args, messages)
     if 'embeds' in sendel:
         for embed in sendel['embeds']:
-            await channel.send(embed=embed)
+            await ctx.send(embed=embed)
     if 'del' in sendel:
         for mg in sendel['del']:
             await mg.delete()
 
 @bot.command(aliases=['o','O'])
 async def obs(ctx):
-    message = ctx.message
-    channel = message.channel
-    messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
-    mentions = message.mentions
-    sendel = calc.obs(ctx, messages, mentions=mentions, author=bot.user)
+    messages = await ctx.message.channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
+    mentions = ctx.message.mentions
+    sendel = calc.obs(ctx, messages, mentions=mentions)
     if 'embeds' in sendel:
         for embed in sendel['embeds']:
-            await channel.send(embed=embed)
+            await ctx.send(embed=embed)
     if 'del' in sendel:
         for mg in sendel['del']:
             await mg.delete()
 
 @bot.command(aliases=['r','R'])
 async def result(ctx):
-    message = ctx.message
-    channel = message.channel
-    messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
-    l = calc.result(ctx,messages,author=bot.user)
+    messages = await ctx.message.channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
+    l = calc.result(ctx,messages)
     if l == None:
         return
     imgDFile, jsonTxt = l
     ch = bot.get_channel(846140589564756068)
     await ch.send(jsonTxt,file=imgDFile)
 
-@bot.command(aliases=['e','E'])
-async def edit(ctx,*args):
-    pass
+@bot.command(aliases=['editT','eT','t','T'])
+async def editTrack(ctx,*args):
+    messages = await ctx.message.channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
+    sendel = calc.editTrack(ctx,messages,args)
+    if 'embeds' in sendel:
+        for embed in sendel['embeds']:
+            await ctx.send(embed=embed)
+    if 'del' in sendel:
+        for mg in sendel['del']:
+            await mg.delete()
 
 @bot.command(aliases=['sd','SD'])
 async def send(ctx):
@@ -109,7 +110,7 @@ async def send(ctx):
         if sch == None:
             return
     messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
-    l = calc.send(sch,messages,author=bot.user)
+    l = calc.send(sch,messages)
     if l == None:
         return
     imgDFile, jsonTxt = l
@@ -144,11 +145,11 @@ async def on_message(message):
 
     if (calc.is13int(content.replace(' ','').replace('-','')) or content.replace(' ','').replace('-','') == '') and content:
         messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
-        sendel = calc.cal(content,messages,author=bot.user)
+        sendel = calc.cal(content,messages)
     
     elif content == 'back':
         messages = await channel.history(after = datetime.utcnow() - timedelta(minutes = MINUTES), oldest_first=False).flatten()
-        sendel = calc.back(messages,author=bot.user)
+        sendel = calc.back(messages)
     
     elif content == 'func':
         embed = function.old_func()
