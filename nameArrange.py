@@ -17,13 +17,13 @@ def delTeam(name,word='team'):
     return name
 
 def delFromList(name):
-    delList = ['チーム','スクアッド','💎','*','私立','幼稚園']
+    delList = ['チーム','スクアッド','💎','*','私立','幼稚園','_MK8DX']
     for d in delList:
         name = name.replace(d,'')
     return name
 
 def splitFromList(name):
-    splitList = ['の',"'s",'(','（',' ','.']
+    splitList = ['の',"'s",'(','（',' ','..']
     for s in splitList:
         if name.split(s)[0] != '':
             name = name.split(s)[0]
@@ -34,8 +34,8 @@ def arg(name,id=0):
     if id in idDict:
         return idDict[id]
     else:
+        name = name.replace('𝓣𝓮𝓪𝓶 𝓢𝓹𝓮𝓬𝓲𝓪𝓵 𝓚𝓾𝓹𝓪','SK')
         name = delTeam(name)
         name = delFromList(name)
         name = splitFromList(name)
         return name
-
