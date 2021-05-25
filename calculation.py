@@ -83,7 +83,7 @@ class table:
         self.teams = list(embed_dict['title'].split('\n')[-1].split(' - '))
         self.sum = list(map(lambda x: int(x.split('(')[0]), embed_dict['description'].replace('`','').split('  @')[0].split(' : ')))
         if 'footer' in embed_dict:
-            self.obs = set(embed_dict['footer']['text'].replace('OBS for @','').split(',@'))
+            self.obs = set(embed_dict['footer']['text'].replace('OBS更新 for @','').split(',@'))
         else:
             self.obs = set()
         self.scores = []
@@ -137,7 +137,7 @@ class table:
             field['inline'] = False
             fields.append(field)
         if len(self.obs) > 0:
-            footer = {'text': 'OBS for @' + ',@'.join(self.obs)}
+            footer = {'text': 'OBS更新 for @' + ',@'.join(self.obs)}
             return {'title':title, 'description':description, 'fields':fields, 'color':ORIGINAL_COLOR, 'footer':footer}
         else:
             return {'title':title, 'description':description, 'fields':fields, 'color':ORIGINAL_COLOR}
