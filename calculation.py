@@ -332,7 +332,11 @@ def txt2rank(txt):
         if char == '1':
             if len(rank_charList) > i+1:
                 nextChar = rank_charList[i+1]
-                if nextChar == '-':
+                if len(rank_charList) > i+3 and rank_charList[i:i+4] == ['1']*4:
+                    rank.append(1)
+                    rank.append(11)
+                    i += 2
+                elif nextChar == '-':
                     rank.append(int(char))
                 elif not nextChar in ['0','1'] and i == 0:
                     rank.append(1)
@@ -748,3 +752,5 @@ def upGSS(embed):
         upDict[user] = sokujiDict
     fbrtdb.update(upDict)
 
+if __name__ == '__main__':
+    print(txt2rank('11112'))
