@@ -85,7 +85,6 @@ def type_search(name):
             return [i[0],strategy_dict[i[0]]]
 
 def embed(txt):
-    global ORIGINAL_COLOR
     track_list = search(txt)
     if not track_list == None:
         embed = discord.Embed(title = track_list[0].replace(':',' '), color = ORIGINAL_COLOR)
