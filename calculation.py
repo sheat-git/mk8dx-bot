@@ -10,6 +10,7 @@ import function as func
 import track
 import fbrtdb
 import mkresult
+import nameArrange
 
 
 ORIGINAL_COLOR = int(os.environ['COLOR'],0)
@@ -503,9 +504,9 @@ def search(messages):
 def start(ctx, args, form=0):
     teams = list(args)
     if ctx.guild == None:
-        name = ctx.author.name
+        name = nameArrange.arg(ctx.author.name)
     else:
-        name = ctx.guild.name
+        name = nameArrange.arg(ctx.guild.name)
     if len(name) > 5:
         name = name[:5]
     c = len(teams)
@@ -541,11 +542,11 @@ def setTeams(ctx, args, messages):
         tbl.teams = teams
     elif len(tbl) == len(teams) + 1:
         if ctx.guild == None:
-            name = ctx.author.name
+            name = nameArrange.arg(ctx.author.name)
         else:
-            name = ctx.guild.name
-        if len(name) > 5:
-            name = name[:5]
+            name = nameArrange.arg(ctx.guild.name)
+        if len(name) > 10:
+            name = name[:10]
         tbl.teams = [name] + teams
     elif len(tbl) > len(teams):
         first_teams = []
@@ -747,6 +748,3 @@ def upGSS(embed):
         upDict[user] = sokujiDict
     fbrtdb.update(upDict)
 
-
-if __name__ == '__main__':
-    print(int(True))
