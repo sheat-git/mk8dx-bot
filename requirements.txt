@@ -2,3 +2,4 @@ discord.py
 matplotlib
 Pillow
 firebase-admin
+discord-py-slash-command
