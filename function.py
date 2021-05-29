@@ -1,6 +1,8 @@
 import discord
 import os
 
+from matplotlib.pyplot import title
+
 
 ORIGINAL_COLOR = int(os.environ['COLOR'],0)
 
@@ -97,3 +99,21 @@ def old_func():
         '```fix\n%func```上記コマンドに変更になりました。'
     embed_dict['color'] = ORIGINAL_COLOR
     return discord.Embed.from_dict(embed_dict)
+
+def nonCalcEmbed():
+    return discord.Embed(title='有効な即時集計が見つかりません',description='先に即時集計を始めてください\n始めていても30分間何も操作がないは更新できません',color=ORIGINAL_COLOR)
+
+def existObsEmbed():
+    return discord.Embed(title='すでにURLは発行・更新されています',description='即時集計の最下部の"OBS更新 for"にあなたの名前があれば更新が続いています',color=ORIGINAL_COLOR)
+
+def successEmbed():
+    return discord.Embed(title='成功しました！',color=ORIGINAL_COLOR)
+
+def changeEmbed():
+    return discord.Embed(title='変更しました',color=ORIGINAL_COLOR)
+
+def sendEmbed():
+    return discord.Embed(title='送信しました',color=ORIGINAL_COLOR)
+
+def nonSensekiEmbed():
+    return discord.Embed(title='「戦績」チャンネルがありません',description='権限がない可能性もあります',color=ORIGINAL_COLOR)
