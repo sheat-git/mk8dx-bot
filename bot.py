@@ -10,6 +10,7 @@ import calculation as calc
 import function
 import track
 import mkresult
+import teamrank
 
 
 TOKEN = os.environ['DISCORD_BOT_TOKEN']
@@ -403,6 +404,14 @@ async def editTrack(ctx,*args):
     if 'del' in sed:
         for mg in sed['del']:
             await mg.delete()
+
+@bot.command(aliases=['tr','tR'])
+async def teamRank(ctx, arg):
+    txt = teamrank.rank(arg)
+    if txt:
+        await ctx.send(content=txt)
+    else:
+        await ctx.send(content='Not Found')
 
 @bot.command(aliases=['f','F'])
 async def func(ctx):
