@@ -27,7 +27,7 @@ def rank(arg):
     if arg_tmp in teamrank_dict:
         l = []
         for t in teamrank_dict[arg_tmp]:
-            if t in ['SFH','φR','¢ν','noir','Ez']:
+            if t in ['SFH','φR','¢ν','noir','Ez','Vortex']:
                 continue
             l.append(t)
         return ' '.join(l)
