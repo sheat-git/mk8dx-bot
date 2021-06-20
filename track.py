@@ -73,7 +73,8 @@ def search(name):
     for i in range(12):
         for j in range(4):
             if name in tracks_list[i][j][1]:
-                return [tracks_list[i][j][0], f'https://raw.githubusercontent.com/sheat-git/mk8dx/main/files/{i+1}.JPG']
+                n = i*4 + j
+                return [tracks_list[i][j][0], n]
 
 def type_search(name):
     front = ['前コース', '前コ', '前こ', '前', '前個', 'まえこ', 'まえ', 'まえこーす']
@@ -88,7 +89,7 @@ def embed(txt):
     track_list = search(txt)
     if not track_list == None:
         embed = discord.Embed(title = track_list[0].replace(':',' '), color = ORIGINAL_COLOR)
-        embed.set_image(url = track_list[1])
+        embed.set_image(url = f'https://raw.githubusercontent.com/sheat-git/mk8dx-images/main/tracks/{track_list[1]}.jpg')
         return embed
     type_list = type_search(txt)
     if not type_list == None:
