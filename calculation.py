@@ -460,7 +460,7 @@ def isTrack(embed,embed_dict=None):
         url = embed.image.url
     if type(url) is discord.embeds._EmptyEmbed:
         return False
-    elif url.startswith('https://raw.githubusercontent.com/sheat-git/mk8dx/main/files/'):
+    elif url.startswith('https://raw.githubusercontent.com/sheat-git/mk8dx-images/main/tracks/'):
         return True
     else:
         return False
