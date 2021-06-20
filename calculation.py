@@ -1,6 +1,5 @@
 import discord
 import string
-from PIL import Image
 from typing import Type, TypeVar
 import io
 import json
@@ -10,6 +9,7 @@ import function as func
 import track
 import fbrtdb
 import mkresult
+import nameArrange
 
 
 ORIGINAL_COLOR = int(os.environ['COLOR'],0)
@@ -317,55 +317,65 @@ def is13int(s):
     else:
         return False
 
+def is_10int(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
 def txt2rank(txt):
-    rank_txt = ''.join(map(lambda x:str(int(x,16)) if is16int(x) else x, txt))
-    if rank_txt.startswith('-'):
-        rank_txt = '1' + rank_txt
-    if rank_txt.endswith('-'):
-        rank_txt += '12'
-    rank_charList = list(rank_txt)
     rank = []
-    i = 0
-    while len(rank_charList) > i:
-        char = rank_charList[i]
-        if char == '1':
-            if len(rank_charList) > i+1:
-                nextChar = rank_charList[i+1]
-                if nextChar == '-':
-                    rank.append(int(char))
-                elif not nextChar in ['0','1'] and i == 0:
-                    rank.append(1)
-                else:
-                    rank.append(int(char + nextChar))
-                    i += 1
+    continueFlag = 0
+    while txt:
+        next_list = []
+        if txt.startswith('-'):
+            continueFlag = 1
+            txt = txt[1:]
+            if rank:
+                prev = rank[-1]
             else:
-                rank.append(int(char))
-        elif char == '0':
-            rank.append(10)
-        elif char == '-':
-            nextChar = rank_charList[i+1]
-            if nextChar == '0':
-                next = 10
-                i += 1
-            elif nextChar == '1':
-                if len(rank_charList) > i+2:
-                    next = int(nextChar + rank_charList[i+2])
-                    i += 2
-                else:
-                    next = 11
-                    i += 1
+                prev = 0
+        if txt.startswith('0'):
+            next_list = [10]
+            txt = txt[1:]
+        elif txt.startswith('10'):
+            next_list = [10]
+            txt = txt[2:]
+        elif txt.startswith('110'):
+            next_list = [1,10]
+            txt = txt[3:]
+        elif txt.startswith('1112'):
+            next_list = [11,12]
+            txt = txt[4:]
+        elif txt.startswith('111'):
+            next_list = [1,11]
+            txt = txt[3:]
+        elif txt.startswith('112'):
+            next_list = [1,12]
+            txt = txt[3:]
+        elif txt.startswith('11'):
+            next_list = [11]
+            txt = txt[2:]
+        elif txt.startswith('12'):
+            if rank:
+                next_list = [12]
             else:
-                next = int(nextChar)
-                i += 1
-            prev = rank[-1]
-            while prev < next:
+                next_list = [1,2]
+            txt = txt[2:]
+        elif txt:
+            next_list = [int(txt[0],16)]
+            txt = txt[1:]
+        if continueFlag:
+            if not next_list:
+                next_list = [12]
+            next = next_list[0]
+            while next - prev > 1:
+                rank.append(prev+1)
                 prev += 1
-                rank.append(prev)
-        else:
-            rank.append(int(char))
-        i += 1
-    rank = sorted(set(rank))
-    return [i for i in rank if 0<i<13]
+            continueFlag = 0
+        rank += next_list
+    return [i for i in sorted(set(rank)) if 0<i<13]
 
 
 def fillRank(rank,form=0,never = {1,2,3,4,5,6,7,8,9,10,11,12}):
@@ -501,11 +511,14 @@ def search(messages):
 
 
 def start(ctx, args, form=0):
-    teams = list(args)
+    teams = []
+    for arg in args:
+        if not arg == None:
+            teams.append(arg)
     if ctx.guild == None:
-        name = ctx.author.name
+        name = nameArrange.arg(ctx.author.name)
     else:
-        name = ctx.guild.name
+        name = nameArrange.arg(ctx.guild.name)
     if len(name) > 5:
         name = name[:5]
     c = len(teams)
@@ -531,21 +544,24 @@ def start(ctx, args, form=0):
     return [func.calStartEmbed(teams=tbl.teams,form=tbl.form,caln=caln,args=args),tbl.toEmbed()]
 
 
-def setTeams(ctx, args, messages):
-    teams = list(args)
-    message = search(messages)[0]
-    if message == None:
+def setTeams(ctx, messages, args):
+    teams = []
+    for arg in args:
+        if not arg == None:
+            teams.append(arg)
+    tbl_mg, stbl_mg, track = search(messages)
+    if tbl_mg == None:
         return {}
-    tbl = table.fromMessage(message)
+    tbl = table.fromMessage(tbl_mg)
     if len(tbl) == len(teams):
         tbl.teams = teams
     elif len(tbl) == len(teams) + 1:
         if ctx.guild == None:
-            name = ctx.author.name
+            name = nameArrange.arg(ctx.author.name)
         else:
-            name = ctx.guild.name
-        if len(name) > 5:
-            name = name[:5]
+            name = nameArrange.arg(ctx.guild.name)
+        if len(name) > 10:
+            name = name[:10]
         tbl.teams = [name] + teams
     elif len(tbl) > len(teams):
         first_teams = []
@@ -554,8 +570,18 @@ def setTeams(ctx, args, messages):
         tbl.teams = first_teams + teams
     else:
         tbl.teams = teams[:len(tbl)]
-    return {'embeds':[tbl.toEmbed()], 'del':[message]}
+    if stbl_mg == None:
+        return {'edit':[{'message':tbl_mg,'embed':tbl.toEmbed()}]}
+    stbl = subTable.fromMessage(stbl_mg)
+    stbl.teams = tbl.teams
+    return {'edit':[{'message':tbl_mg,'embed':tbl.toEmbed()},{'message':stbl_mg,'embed':stbl.toEmbed()}]}
 
+def _setTeams(ctx,messages,args):
+    returnDict = setTeams(ctx,messages,args)
+    if returnDict:
+        returnDict['send'] = [{'content':'変更しました'}]
+        return returnDict
+    return {'send':[{'content':'ERROR: 過去30分以内/100件以内に即時集計がみつからない'}]}
 
 def cal(content,messages):
     tbl_mg, stbl_mg, track = search(messages)
@@ -573,16 +599,16 @@ def cal(content,messages):
             return {}
         if stbl.filled() == 12//tbl.form:
             tbl.addStbl(stbl)
-            returnDict =  {'embeds':[stbl.toEmbed(), tbl.toEmbed()],'del':[tbl_mg]}
+            returnDict =  {'send':[{'embed':stbl.toEmbed()}, {'embed':tbl.toEmbed()}],'del':[tbl_mg]}
         else:
-            returnDict =  {'embeds':[stbl.toEmbed()],'del':[]}
+            returnDict =  {'send':[{'embed':stbl.toEmbed()}],'del':[]}
         if stbl_mg == None:
             return returnDict
         else:
             returnDict['del'].append(stbl_mg)
             return returnDict
     tbl.addTxt(content,track)
-    return {'embeds':[tbl.toEmbed()],'del':[tbl_mg]}
+    return {'send':[{'embed':tbl.toEmbed()}],'del':[tbl_mg]}
 
 
 def back(messages):
@@ -591,13 +617,13 @@ def back(messages):
         stbl = subTable.fromMessage(stbl_mg)
         if stbl.filled() > 1:
             stbl.back()
-            return {'embeds':[stbl.toEmbed()],'del':[stbl_mg]}
+            return {'send':[{'embed':stbl.toEmbed()}],'del':[stbl_mg]}
         else:
             return {'del':[stbl_mg]}
     elif not tbl_mg == None:
         tbl = table.fromMessage(tbl_mg)
         tbl.back()
-        return {'embeds':[tbl.toEmbed()],'del':[tbl_mg]}
+        return {'send':[{'embed':tbl.toEmbed()}],'del':[tbl_mg]}
 
 
 def editTrack(ctx,messages,args):
@@ -628,31 +654,33 @@ def editTrack(ctx,messages,args):
             tbl.tracks[race-1] = tr
         else:
             tbl.tracks[race] = tr
-        return {'embeds':[tbl.toEmbed()],'del':[tbl_mg]}
+        return {'edit':[{'message':tbl_mg,'embed':tbl.toEmbed()}]}
     stbl = subTable.fromMessage(stbl_mg)
     if stbl.race == race or race == 0:
         stbl.track = tr
-        return {'embeds':[tbl.toEmbed(),stbl.toEmbed()],'del':[tbl_mg,stbl_mg]}
+        return {'edit':[{'message':stbl_mg,'embed':stbl.toEmbed()}]}
     if int(tbl) < race and race < - int(tbl):
         return {}
     if race >= 0:
         tbl.tracks[race-1] = tr
     else:
         tbl.tracks[race] = tr
-    return {'embeds':[tbl.toEmbed(),stbl.toEmbed()],'del':[tbl_mg,stbl_mg]}
+    return {'edit':[{'message':tbl_mg,'embed':tbl.toEmbed()}]}
     
 
-def result(ctx,messages):
+def result(messages,cmd='result'): 
+    if not cmd in ['result','send']:
+        return {}
     tbl_mg, stbl_mg, track = search(messages)
     if tbl_mg == None:
-        return
+        return {}
     tbl = table.fromMessage(tbl_mg)
     if tbl.form != 6 or int(tbl) < 12:
-        return
+        return {}
     sum = tbl.sum
     teams = tbl.teams
     difs = [0]*int(tbl)
-    if sum[0] < sum[1]:
+    if cmd == 'result' and sum[0] < sum[1]:
         sum.reverse()
         teams.reverse()
         for i,score in enumerate(tbl.scores):
@@ -670,31 +698,9 @@ def result(ctx,messages):
     image_binary.seek(0)
     imgDFile = discord.File(fp=image_binary,filename='result.png')
     image_binary.close()
-    jsonData = {'type':'result','id':ctx.channel.id,'teams':teams,'sum':sum}
-    return [imgDFile,json.dumps(jsonData)]
-
-def send(channel,messages):
-    tbl_mg, stbl_mg, track = search(messages)
-    if tbl_mg == None:
-        return
-    tbl = table.fromMessage(tbl_mg)
-    if tbl.form != 6 or int(tbl) < 12:
-        return
-    sum = tbl.sum
-    teams = tbl.teams
-    difs = [0]*int(tbl)
-    for i,score in enumerate(tbl.scores):
-        difs[i] = score[0] - score[1]
-        if i > 0:
-            difs[i] += difs[i-1]
-    img = mkresult.make6(difs,sum,teams)
-    image_binary = io.BytesIO()
-    img.save(image_binary,'png')
-    image_binary.seek(0)
-    imgDFile = discord.File(fp=image_binary,filename='result.png')
-    image_binary.close()
-    jsonData = {'type':'send','id':channel.id,'teams':teams,'sum':sum}
-    return [imgDFile,json.dumps(jsonData)]
+    embed = discord.Embed(title=' - '.join(teams),color=ORIGINAL_COLOR)
+    embed.set_image(url='attachment://result.png')
+    return {'send':[{'embed':embed,'file':imgDFile}]}
 
 
 def obs(ctx, messages, mentions=[]):
@@ -710,17 +716,32 @@ def obs(ctx, messages, mentions=[]):
     if not users:
         return {}
     tbl.obs |= users
-    returnDict = {'embeds':[func.calObsEmbed(users=users),tbl.toEmbed()],'del':[tbl_mg]}
+    returnDict = {'send':[{'embed':func.calObsEmbed(users=users)},{'embed':tbl.toEmbed()}],'del':[tbl_mg]}
     if stbl_mg == None:
         return returnDict
-    returnDict['embeds'].append(subTable.fromMessage(stbl_mg).toEmbed())
+    returnDict['send'].append({'embed':subTable.fromMessage(stbl_mg).toEmbed()})
     returnDict['del'].append(stbl_mg)
     return returnDict
 
-def upGSS(embed):
-    if not isTable(embed):
+def _obs(ctx, messages):
+    tbl_mg, stbl_mg, track = search(messages)
+    if tbl_mg == None:
+        return {'send':[{'content':'ERROR: 過去30分以内/100件以内に即時集計がみつからない'}]}
+    tbl = table.fromMessage(tbl_mg)
+    users = {str(ctx.author).replace('#','')}
+    users -= tbl.obs
+    if not users:
+        return {'send':[{'content':'ERROR: すでに発行/更新してある'}]}
+    tbl.obs |= users
+    return {'send':[{'embed':func.calObsEmbed(users=users)}],'edit':[{'message':tbl_mg,'embed':tbl.toEmbed()}]}
+
+def upGSS(embed,embed_dict=None):
+    if not isTable(embed,embed_dict):
         return
-    tbl = table.fromEmbed(embed)
+    if embed == None:
+        tbl = table.fromDict(embed_dict)
+    else:
+        tbl = table.fromEmbed(embed)
     if len(tbl.obs) == 0:
         return
     users = tbl.obs
@@ -747,6 +768,5 @@ def upGSS(embed):
         upDict[user] = sokujiDict
     fbrtdb.update(upDict)
 
-
 if __name__ == '__main__':
-    print(int(True))
+    print(txt2rank('11112'))
